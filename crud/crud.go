@@ -16,19 +16,19 @@ type Mahasiswa struct {
 }
 
 func CreateMahasiswa (mahasiswa Mahasiswa){
-        db := database.GetConnection()
+        db := database_connection.GetConnection()
 
-        ctx := context.Backgroudn()
+        ctx := context.Background()
         _, err := db.ExecContext(ctx, "INSERT INTO mahasiswa (nim, nama, jurusan,semester, nomor_hp) VALUE(?, ?, ?, ?, ?)", mahasiswa.NIM, mahasiswa.Nama, mahasiswa.Jurusan, mahasiswa.Semester, mahasiswa.Nomor_hp)
         if err != nil {
                 fmt.Println("Error : ", err)
-                returnmaahs
+                return
         }
         fmt.Println("Data  Mahasiswa Berhasil Dibuat")
 }
 
 func ReadMahasiswa () *sql.Rows {
-	db := database.GetConnection()
+	db := database_connection.GetConnection()
 
 	ctx := context.Background()
 	rows, err := db.QueryContext(ctx, "SELECT * FROM mahasiswa")
@@ -40,11 +40,11 @@ func ReadMahasiswa () *sql.Rows {
 }
 
 func UpdateMahasiwa (NIM string, mahasiswa Mahasiswa) {
-	db := connection.GetConnection()
+	db := database_connection.GetConnection()
 	defer db.Close()
 
 	ctx := context.Background()
-	result, err := db.ExecContext(ctx, "UPDATE mahasiswa SET nim=?, nama=?, jurusan=?, semester=?, nomor_hp=? WHERE nim=?", mahasiswa.NIM, mahasiswa.Nama, student.Jurusan, student.Semester, student.Nomor_hp, NIM)
+	result, err := db.ExecContext(ctx, "UPDATE mahasiswa SET nim=?, nama=?, jurusan=?, semester=?, nomor_hp=? WHERE nim=?", mahasiswa.NIM, mahasiswa.Nama, mahasiswa.Jurusan, mahasiswa.Semester, mahasiswa.Nomor_hp, NIM)
 
 	if err != nil {
 		fmt.Println("Error : ", err)
@@ -61,7 +61,7 @@ func UpdateMahasiwa (NIM string, mahasiswa Mahasiswa) {
 }
 
 func DeleteMahasiwa (NIM string) {
-        db := connection.GetConnection()
+        db := database_connection.GetConnection()
         defer db.Close()
 
         ctx := context.Background()
