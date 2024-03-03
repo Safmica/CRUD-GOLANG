@@ -1,4 +1,4 @@
-package project1
+package database_connection
 
 import(
 	_ "github.com/go-sql-driver/mysql"
