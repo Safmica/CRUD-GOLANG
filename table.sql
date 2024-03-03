@@ -1,5 +1,3 @@
-USE gdsc;
-
 CREATE TABLE mahasiswa (
 	nim VARCHAR(50) PRIMARY KEY NOT NULL,
 	nama VARCHAR(50) NOT NULL,

@@ -3,7 +3,6 @@ package crud
 import (
         "context"
         "fmt"
-	"database/sql"
         "github.com/Safmica/CRUD-GOLANG/database_connection"
 )
 
@@ -27,19 +26,39 @@ func CreateMahasiswa (mahasiswa Mahasiswa){
         fmt.Println("Data  Mahasiswa Berhasil Dibuat")
 }
 
-func ReadMahasiswa () *sql.Rows {
+func ReadMahasiswa () {
 	db := database_connection.GetConnection()
+	defer db.Close()
 
 	ctx := context.Background()
 	rows, err := db.QueryContext(ctx, "SELECT * FROM mahasiswa")
+
 	if err != nil {
-		fmt.Println("Error : ", err)
+		fmt.Println("Error:", err)
+		return
+	}
+	defer rows.Close()
+
+	index := 1
+	for rows.Next() {
+		var mahasiswa Mahasiswa
+		err := rows.Scan(&mahasiswa.NIM, &mahasiswa.Nama, &mahasiswa.Jurusan, &mahasiswa.Semester, &mahasiswa.Nomor_hp)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+
+		fmt.Printf("%d. NIM : %s, Nama : %s, Jurusan : %s, Semester : %d, Nomor HP : %s\n", index, mahasiswa.NIM, mahasiswa.Nama, mahasiswa.Jurusan, mahasiswa.Semester, mahasiswa.Nomor_hp)
+		index++
 	}
 
-	return rows
+	if err := rows.Err(); err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 }
 
-func UpdateMahasiwa (NIM string, mahasiswa Mahasiswa) {
+func UpdateMahasiswa (NIM string, mahasiswa Mahasiswa) {
 	db := database_connection.GetConnection()
 	defer db.Close()
 
@@ -60,12 +79,12 @@ func UpdateMahasiwa (NIM string, mahasiswa Mahasiswa) {
 	fmt.Println("Data Mahasiswa Berhasil diUpdate!")
 }
 
-func DeleteMahasiwa (NIM string) {
+func DeleteMahasiswa (NIM string) {
         db := database_connection.GetConnection()
         defer db.Close()
 
         ctx := context.Background()
-        result, err := db.ExecContext(ctx, "DELETE mahasiswa WHERE nim=?", NIM)
+        result, err := db.ExecContext(ctx, "DELETE FROM mahasiswa WHERE nim=?", NIM)
 
         if err != nil {
                 fmt.Println("Error : ", err)
