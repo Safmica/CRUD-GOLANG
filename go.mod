@@ -1,4 +1,4 @@
-module database
+module github.com/Safmica/CRUD-GOLANG
 
 go 1.21.6
 
